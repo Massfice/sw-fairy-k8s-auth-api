@@ -1,6 +1,7 @@
 import { HttpService } from '@nestjs/axios';
-import { Injectable } from '@nestjs/common';
-import { map } from 'rxjs/operators';
+import { HttpException, Injectable } from '@nestjs/common';
+import { map, catchError } from 'rxjs/operators';
+import { Http as httpStatus } from '@status/codes';
 
 import { Auth0TokenRequestDto } from './dto/Auth0TokenRequestDto';
 import { CodeExchangeResponseModel } from './models/CodeExchangeResponseModel';
@@ -25,6 +26,15 @@ export class TokenService {
                 const tokenPayload = JSON.parse(Buffer.from(id_token.split('.')[1], 'base64').toString());
 
                 return { access_token, user: { email: tokenPayload.email, nick: tokenPayload.nickname } };
+            }),
+            catchError((err) => {
+                const { error = null } = err.response && err.response.data ? err.response.data : {};
+
+                if (error === 'invalid_grant') {
+                    throw new HttpException('Invalid code', httpStatus.Forbidden);
+                }
+
+                throw err;
             }),
         );
     }

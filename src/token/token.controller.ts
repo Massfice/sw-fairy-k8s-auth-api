@@ -6,6 +6,7 @@ import { Observable } from 'rxjs';
 import { CodeExchangeRequestDto } from './dto/CodeExchangeRequestDto';
 import { BadRequestResponseModel } from './models/BadRequestResponseModel';
 import { CodeExchangeResponseModel } from './models/CodeExchangeResponseModel';
+import { InvalidCodeResponseModel } from './models/InvalidCodeResponseModel';
 import { TokenService } from './token.service';
 
 @Controller('token')
@@ -23,10 +24,13 @@ export class TokenController {
         type: BadRequestResponseModel,
         status: httpStatus.BadRequest,
     })
+    @ApiResponse({
+        description: 'Invalid code',
+        type: InvalidCodeResponseModel,
+        status: httpStatus.Forbidden,
+    })
     @Get('/codeExchange')
     codeExchange(@Query() query: CodeExchangeRequestDto): Observable<CodeExchangeResponseModel> {
         return this.tokenService.codeExchange(query.code);
-
-        // return { access_token: query.code };
     }
 }
