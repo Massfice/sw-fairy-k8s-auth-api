@@ -7,6 +7,6 @@ export class TokenController {
 
     @Get('/exchange')
     exchangeToken() {
-        return { token: 'Exchanged' };
+        return { token: 'Exchanged with Dapr' };
     }
 }
