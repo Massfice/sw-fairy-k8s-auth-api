@@ -13,7 +13,9 @@
         "start:dev": "nest start --watch",
         "start:debug": "nest start --debug --watch",
         "start:prod": "node dist/main",
-        "lint": "eslint \"{src,apps,libs}/**/*.ts\" --fix"
+        "lint": "eslint \"{src,apps,libs}/**/*.ts\"",
+        "lint:fix": "eslint \"{src,apps,libs}/**/*.ts\" --fix",
+        "husky:init": "husky install && husky add .husky/pre-commit 'npm run lint'"
     },
     "dependencies": {
         "@nestjs/common": "^8.0.0",
@@ -36,6 +38,7 @@
         "eslint": "^7.30.0",
         "eslint-config-prettier": "^8.3.0",
         "eslint-plugin-prettier": "^3.4.0",
+        "husky": "^7.0.2",
         "prettier": "^2.3.2",
         "ts-jest": "^27.0.3",
         "ts-loader": "^9.2.3",

@@ -36,4 +36,4 @@ lerna-debug.log*
 
 # Others
 yarn.lock
-husky
+.husky
