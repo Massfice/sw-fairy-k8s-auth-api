@@ -1,6 +1,7 @@
 import { Controller, Get, Query } from '@nestjs/common';
 import { ApiOperation, ApiResponse } from '@nestjs/swagger';
 import { Http as httpStatus } from '@status/codes';
+import { Observable } from 'rxjs';
 
 import { CodeExchangeRequestDto } from './dto/CodeExchangeRequestDto';
 import { BadRequestResponseModel } from './models/BadRequestResponseModel';
@@ -23,7 +24,9 @@ export class TokenController {
         status: httpStatus.BadRequest,
     })
     @Get('/codeExchange')
-    exchangeToken(@Query() query: CodeExchangeRequestDto): CodeExchangeResponseModel {
-        return { access_token: query.code };
+    codeExchange(@Query() query: CodeExchangeRequestDto): Observable<CodeExchangeResponseModel> {
+        return this.tokenService.codeExchange(query.code);
+
+        // return { access_token: query.code };
     }
 }
