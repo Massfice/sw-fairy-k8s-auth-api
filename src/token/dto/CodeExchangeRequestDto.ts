@@ -3,6 +3,6 @@ import { IsNotEmpty } from 'class-validator';
 
 export class CodeExchangeRequestDto {
     @ApiProperty()
-    @IsNotEmpty()
+    @IsNotEmpty({ message: 'Code should be provided' })
     code: string;
 }

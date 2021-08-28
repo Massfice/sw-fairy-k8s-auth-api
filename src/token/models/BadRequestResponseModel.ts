@@ -1,12 +1,13 @@
 import { ApiProperty } from '@nestjs/swagger';
+import { Http as httpStatus } from '@status/codes';
 
 export class BadRequestResponseModel {
-    @ApiProperty()
+    @ApiProperty({ example: httpStatus.BadRequest })
     statusCode: number;
 
-    @ApiProperty()
+    @ApiProperty({ example: ['Code should be provided'] })
     message: string[];
 
-    @ApiProperty()
+    @ApiProperty({ example: 'Bad Request' })
     error: string;
 }
