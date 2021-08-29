@@ -5,7 +5,7 @@ COPY . .
 
 USER root
 
-RUN npm install -g @nestjs/cli
+RUN sudo npm install -g @nestjs/cli
 RUN npm install
 RUN npm build
 
