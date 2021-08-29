@@ -6,17 +6,20 @@ import { Http as httpStatus } from '@status/codes';
 import { DaprAuthApiSecrectDto } from './dto/DaprAuthApiSecrectDto';
 import { Auth0TokenRequestDto } from './dto/Auth0TokenRequestDto';
 
-const daprPort = process.env.DAPR_PORT || 3500;
-const redirectUri = process.env.TOKEN_REDIRECT_URI || 'https://shinobi-war-fairy.online';
-
 @Injectable()
 export class TokenService {
-    constructor(private http: HttpService) {}
+    daprPort: number | string;
+    redirectUri: string;
+
+    constructor(private http: HttpService) {
+        this.daprPort = process.env.DAPR_PORT || 3500;
+        this.redirectUri = process.env.TOKEN_REDIRECT_URI || 'https://shinobi-war-fairy.online';
+    }
 
     codeExchange(code: string) {
         return this.http
             .get<DaprAuthApiSecrectDto>(
-                `http://localhost:${daprPort}/v1.0/secrets/kubernetes/auth-api?metadata.namespace=default`,
+                `http://localhost:${this.daprPort}/v1.0/secrets/kubernetes/auth-api?metadata.namespace=default`,
             )
             .pipe(
                 concatMap((response) => {
@@ -27,7 +30,7 @@ export class TokenService {
                         client_id: clientId,
                         client_secret: clientSecret,
                         code,
-                        redirect_uri: redirectUri,
+                        redirect_uri: this.redirectUri,
                     });
                 }),
                 map((response) => {
