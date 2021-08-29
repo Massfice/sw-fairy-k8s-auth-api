@@ -1,0 +1,32 @@
+version: 2.1
+
+orbs:
+    kubernetes: circleci/kubernetes@0.12.0
+    docker: circleci/docker@1.6.0
+
+jobs:
+    deploy:
+        docker:
+            - image: circleci/node:7.10
+        executor: docker/docker
+        steps:
+            - setup_remote_docker
+            - checkout
+            - kubernetes/install-kubectl
+            - run: sudo npm i gulp-cli -g
+            - run: npm i @massfice/sw-fairy-common-deploy-scripts typescript --save
+            - run: npm cache clean -f
+            - run: sudo npm install -g n
+            - run: sudo n latest
+            - run: gulp deploy --commit $CIRCLE_SHA1 --dtoken $DOCKER_TOKEN --ktoken $KUBE_TOKEN
+workflows:
+    version: 2
+    deploy:
+        jobs:
+            - deploy:
+                  context:
+                      - Shinobi War Fairy
+                  filters:
+                      branches:
+                          only:
+                              - main

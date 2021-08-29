@@ -1,0 +1,27 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+    name: shinobi-war-fairy-auth-api
+    namespace: default
+    labels:
+        app: shinobi-war-fairy-auth-api
+spec:
+    replicas: 1
+    selector:
+        matchLabels:
+            app: shinobi-war-fairy-auth-api
+    template:
+        metadata:
+            labels:
+                app: shinobi-war-fairy-auth-api
+            annotations:
+                dapr.io/enabled: 'true'
+                dapr.io/app-id: 'auth-api'
+                dapr.io/app-port: '3002'
+        spec:
+            containers:
+                - name: shinobi-war-fairy-auth-api
+                  image: registry.digitalocean.com/sw-fairy-k8s/sw-fairy-k8s-auth-api:{{commitId}}
+                  ports:
+                      - containerPort: 3002
+                        name: http
