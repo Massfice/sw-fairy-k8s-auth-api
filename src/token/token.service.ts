@@ -3,8 +3,11 @@ import { HttpException, Injectable } from '@nestjs/common';
 import { map, catchError, concatMap } from 'rxjs/operators';
 import { Http as httpStatus } from '@status/codes';
 
-import { DaprClientCredentialsDto } from './dto/DaprClientCredentialsDto';
+import { DaprAuthApiSecrectDto } from './dto/DaprAuthApiSecrectDto';
 import { Auth0TokenRequestDto } from './dto/Auth0TokenRequestDto';
+
+const daprPort = process.env.DAPR_PORT || 3500;
+const redirectUri = process.env.TOKEN_REDIRECT_URI || 'https://shinobi-war-fairy.online';
 
 @Injectable()
 export class TokenService {
@@ -12,7 +15,9 @@ export class TokenService {
 
     codeExchange(code: string) {
         return this.http
-            .get<DaprClientCredentialsDto>('http://localhost:3500/v1.0/secrets/auth-api/clientCredentials')
+            .get<DaprAuthApiSecrectDto>(
+                `http://localhost:${daprPort}/v1.0/secrets/kubernetes/auth-api?metadata.namespace=default`,
+            )
             .pipe(
                 concatMap((response) => {
                     const [clientId, clientSecret] = response.data.clientCredentials.split('.');
@@ -22,7 +27,7 @@ export class TokenService {
                         client_id: clientId,
                         client_secret: clientSecret,
                         code,
-                        redirect_uri: 'http://localhost:3000',
+                        redirect_uri: redirectUri,
                     });
                 }),
                 map((response) => {
