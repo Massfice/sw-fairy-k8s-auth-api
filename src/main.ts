@@ -6,6 +6,7 @@ import { AppModule } from './app.module';
 async function bootstrap() {
     const app = await NestFactory.create(AppModule);
 
+    //http://localhost:3500/v1.0/invoke/auth-api/method/docs
     const config = new DocumentBuilder()
         .setTitle('Auth API')
         .setDescription('Auth API for working with Auth0')
@@ -17,7 +18,7 @@ async function bootstrap() {
 
     const document = SwaggerModule.createDocument(app, config);
 
-    SwaggerModule.setup('docs', app, document, { customSiteTitle: 'SW Fairy - Auth API' });
+    SwaggerModule.setup('/docs', app, document, { customSiteTitle: 'SW Fairy - Auth API' });
 
     app.useGlobalPipes(new ValidationPipe());
 
