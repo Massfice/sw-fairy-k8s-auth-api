@@ -40,7 +40,10 @@ export class TokenService {
 
                     return {
                         access_token,
-                        user: { email: tokenPayload.email, nick: tokenPayload.nickname },
+                        user: {
+                            email: tokenPayload.email,
+                            nick: tokenPayload['https://shinobi-war-fairy.online/nickname'] || 'New User',
+                        },
                     };
                 }),
                 catchError((err) => {
